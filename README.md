@@ -39,7 +39,7 @@ Go ahead and `docker build -t REPONAME -f Dockerfile.serve .`. An already built 
 
 There you go - a docker image you can use to serve your models without building the models into the image docker image :)
 
-#### Doockerfile.withmodel
+#### Dockerfile.withmodel
 If you want to run the image with even fewer flags, you can build an image with a model. Have a look at the example file Dockerfile.withmodel.
 
 Feel free to also push these images to dockerhub, BUT don't overwrite the `base` and `serve` images!!

@@ -35,7 +35,7 @@ Although we can easily use the image built and ran in the previous section, we c
 #### Dockerfile.serve
 If you want to be able to run you image by just doing `docker run --name NAME -p HOSTPORT:CONTAINERPORT -v /HOST/MODELPATH>:/CONTAINER/MODELPATH epigramai/model-server:serve --port=CONTAINERPORT --model_name=MODELNAME --model_base_path=/CONTAINER/MODELPATH`. Yep, without the looong path to the built model server.
 
-Go ahead and `docker build -t REPONAME -f Dockerfile.serve .`. This image can be found [on epigram docker hub](https://hub.docker.com/r/epigramai/model-server/) with the `serve` tag.
+Go ahead and `docker build -t REPONAME -f Dockerfile.serve .`. An already built image can be found [on epigram docker hub](https://hub.docker.com/r/epigramai/model-server/) with the `serve` tag.
 
 There you go - a docker image you can use to serve your models without building the models into the image docker image :)
 

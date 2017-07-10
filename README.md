@@ -7,8 +7,8 @@ Dockerfile.devel is copied from TensorFlow Serving github repo. It's basically u
 TensorFlow Serving code is built with [bazel](https://bazel.build/). If you look in Dockerfile.devel, you'll see that a bunch of bazel stuff if installed in order to build and run TensorFlow Serving code.
 
 #### Build docker image
-`cd docker-build/`
-`docker build -t REPONAME Dockerfile.devel .`
+- `cd docker-build/`
+- `docker build -t REPONAME Dockerfile.devel .`
  
  You've now built an image with all the dependencies to build and run Tensorflow Serving.
 

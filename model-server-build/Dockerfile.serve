@@ -1,4 +1,4 @@
-FROM epigramai/model-server:latest
+FROM epigramai/model-server:base
 
 ENTRYPOINT ["serving/bazel-bin/tensorflow_serving/model_servers/tensorflow_model_server"]
 

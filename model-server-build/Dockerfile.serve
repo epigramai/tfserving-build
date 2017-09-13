@@ -1,5 +1,0 @@
-FROM epigramai/model-server:base
-
-ENTRYPOINT ["serving/bazel-bin/tensorflow_serving/model_servers/tensorflow_model_server"]
-
-# docker run --name NAME -p HOSTPORT:CONTAINERPORT -v /HOST/MODELPATH>:/CONTAINER/MODELPATH epigramai/model-server:entry --port=CONTAINERPORT --model_name=MODELNAME --model_base_path=/CONTAINER/MODELPATH

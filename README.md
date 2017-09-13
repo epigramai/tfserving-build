@@ -1,55 +1,37 @@
 # tfserving
 Build docker images to serve tensorflow models in production. [TensorFlow Serving](https://github.com/tensorflow/serving) is an open-source library for serving machine learning models in production.
 
-### docker-build (with apt-get tensorflow-model-server)
+### Two different model servers
 See the section [Installing the ModelServer](https://www.tensorflow.org/serving/setup).
 
-This is a lightweight model server. The images we have hosted on epigram docker hub are built with the files in *build-light/* and *build-light-universal/*
+The images we have hosted on epigram docker hub are built with the Dockerfiles in *build-light/* and *build-light-universal/*
  
 - In *build-light/* there is a Dockerfile to build an image with a compiled server. This server might not work on all servers, it's compiled with AVX instructions.
 - In *build-light-universal/* there is a Dockerfile to build an image without AVX instructions. Should work on all servers.
 
-### docker-build (compile model server) *Deprecated see prev section*
-Dockerfile.devel is copied from TensorFlow Serving github repo. It's basically used to build a docker image that has all necessary dependencies installed to build and run the code to serve models.
+See the Dockerfiles for build information.
 
-TensorFlow Serving code is built with [bazel](https://bazel.build/). If you look in Dockerfile.devel, you'll see that a bunch of bazel stuff if installed in order to build and run TensorFlow Serving code.
+If you want to serve the mnist model in one of these images, do:
 
-#### Build docker image
-- `cd docker-build/`
-- `docker build -t REPONAME -f Dockerfile.devel .`
- 
- You've now built an image with all the dependencies to build and run Tensorflow Serving.
- 
- Btw, the image exists here: [epigramai/model-server:devel](https://hub.docker.com/r/epigramai/model-server/tags/).
+`docker run -it --name mnist -p 9000:9000 -v /Users/slp/.tfwrapper/serving_models:/models/ epigramai/model-server:light --port=9000 --model_name=mnist --model_base_path=/models/mnist`
 
-#### Compile and commit
-Run the docker image with `docker run --name NAME -it REPONAME (the remoname you chose above)`.
-
-In the running docker container clone TensorFlow Serving code `git clone --recurse-submodules https://github.com/tensorflow/serving`.
+- We name the container mnist
+- We're mapping port 9000 from outside the container to the model server's port 9000.
+- We mount a volume where the models are located (the -v HOST_PATH:WHERE_TO_MOUNT_IN_CONTAINER)
+- Three flags (port, name, base path) to tell the model what to run and which port.
 
 
-Build what's needed to run the model server
-- `cd serving/tensorflow`
-- `./configure` (Just hit enter until finished, unless you have special needs)
-- `cd ..`
-- `bazel build -c opt //tensorflow_serving/model_servers:tensorflow_model_server` (Or `bazel build -c opt //tensorflow_serving/...` if you want to build all code. Not needed to serve models.)
-- docker commit CONTAINER REPONAME
+#### build-model-light
+Although we can easily use the images we built and ran in the previous section, we can make the run process even easier.
 
-By doint a commit, we store the current container to an image. The final image can be used to serve tf models. This image can be found [on epigram docker hub](https://hub.docker.com/r/epigramai/model-server/) with the `base` tag. DO NOT, NEVER, EVER OVERWRITE THIS IMAGE! It takes forever to build!
+In *build-model-light/* there is a Dockerfile that COPY the model into the image. By using this approach, the models
+are stored inside the image and there's no need to use -v option and passing all the flags (e.g --port=9000, ...) to the container
+when running it. The image is ready to run as is.
 
-Run the docker image by doing `docker run --name NAME -p HOSTPORT:CONTAINERPORT -v /HOST/MODELPATH>:/CONTAINER/MODELPATH epigramai/model-server:base serving/bazel-bin/tensorflow_serving/model_servers/tensorflow_model_server --port=CONTAINERPORT --model_name=MODELAME --model_base_path=/CONTAINER/MODELPATH`
+Assume you have build a container called *epigramai/model-server:my-model-1*, then serve the model by doing:
+`docker run -it --name mnist -p 9000:9000 epigramai/model-server:my-model-1`
 
-#### model-server-build
-Although we can easily use the image built and ran in the previous section, we can make the run process even easier.
-
-#### Dockerfile.serve
-If you want to be able to run you image by just doing `docker run --name NAME -p HOSTPORT:CONTAINERPORT -v /HOST/MODELPATH>:/CONTAINER/MODELPATH epigramai/model-server:serve --port=CONTAINERPORT --model_name=MODELNAME --model_base_path=/CONTAINER/MODELPATH`. Yep, without the looong path to the built model server.
-
-Go ahead and `docker build -t REPONAME -f Dockerfile.serve .`. An already built image can be found [on epigram docker hub](https://hub.docker.com/r/epigramai/model-server/) with the `serve` tag.
-
-There you go - a docker image you can use to serve your models without building the models into the image docker image :)
-
-
+Se the Dockerfile in *build-model-light/* for how to build. 
 
 ### Client to send requests
 TODO...

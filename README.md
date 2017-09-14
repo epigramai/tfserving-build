@@ -2,7 +2,7 @@
 Build docker images to serve tensorflow models in production. [TensorFlow Serving](https://github.com/tensorflow/serving) is an open-source library for serving machine learning models in production.
 
 ### Two different model servers
-See the section [Installing the ModelServer](https://www.tensorflow.org/serving/setup).
+See the section [Installing the ModelServer](https://www.tensorflow.org/serving/setup#installing_using_apt-get).
 
 The images we have hosted on epigram docker hub are built with the Dockerfiles in *build-light/* and *build-light-universal/*
  
